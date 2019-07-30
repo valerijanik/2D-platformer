@@ -1,0 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Playerhealth : MonoBehaviour {
+
+    public float fullHealth;
+    float currentHealth;
+    Playermovement controllermove;
+
+	void Start () {
+        currentHealth = fullHealth;
+
+        controllermove = GetComponent<Playermovement> ();
+	}
+	
+    public void addDamage(float damage)
+    {
+        if (damage <= 0) return;
+        currentHealth -= damage;
+
+        if (currentHealth <= 0){
+            makeDead();
+        }
+    }
+
+    public void makeDead(){
+        Destroy(gameObject);
+    }
+}
