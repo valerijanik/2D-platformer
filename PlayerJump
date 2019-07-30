@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Playerjump : MonoBehaviour {
+
+	private Rigidbody2D rb;
+	private float jumpTimeCounter;
+	public float jumpTime;
+
+	public float jumpForce = 300f;
+
+	public Transform groundCheck;
+	public float groundRadius = 0.2f;
+	public bool grounded = false;
+	public LayerMask whatIsGround;
+	private bool isJumping;
+
+
+	void FixedUpdate ()
+	{
+
+		bool jump = Input.GetButtonDown ("Jump");
+
+		grounded = Physics2D.OverlapCircle (groundCheck.position, groundRadius, whatIsGround);
+
+		if (jump && grounded) GetComponent<Rigidbody2D> ().AddForce (Vector3.up * jumpForce * 50);
+		
+	}
+
+	void Update ()
+	{
+		if (Input.GetKey (KeyCode.Space) && isJumping == true) {
+
+			if (jumpTimeCounter > 0) {
+				rb.velocity = Vector2.up * jumpForce;
+				jumpTimeCounter -= Time.deltaTime;
+			} else {
+				isJumping = false;
+			}
+		}
+
+		if(Input.GetKeyUp(KeyCode.Space)){
+			isJumping = false;
+		
+
+		}
+	}
+}
