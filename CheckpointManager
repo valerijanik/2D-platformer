@@ -1,0 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CheckpointManager : MonoBehaviour
+{
+    public static CheckpointManager Instance;
+
+    HashSet<int> reachedCheckpoints;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+
+        else
+            Destroy(gameObject);
+
+        reachedCheckpoints = new HashSet<int>();
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void CheckpointReached(Checkpoint point)
+    {
+        reachedCheckpoints.Add(point.id);
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        if (level == 0)
+        {
+            reachedCheckpoints.Clear();
+        }
+        else
+        {
+            Checkpoint levelCheckpoint = FindObjectOfType<Checkpoint>();
+            if (levelCheckpoint != null && reachedCheckpoints.Contains(levelCheckpoint.id))
+                FindObjectOfType<PlayerHealthManager>().transform.position = levelCheckpoint.transform.position;
+        }
+    }
+}
