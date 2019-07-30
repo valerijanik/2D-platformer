@@ -19,13 +19,9 @@ public class Playerjump : MonoBehaviour {
 
 	void FixedUpdate ()
 	{
-
 		bool jump = Input.GetButtonDown ("Jump");
-
 		grounded = Physics2D.OverlapCircle (groundCheck.position, groundRadius, whatIsGround);
-
 		if (jump && grounded) GetComponent<Rigidbody2D> ().AddForce (Vector3.up * jumpForce * 50);
-		
 	}
 
 	void Update ()
@@ -42,8 +38,6 @@ public class Playerjump : MonoBehaviour {
 
 		if(Input.GetKeyUp(KeyCode.Space)){
 			isJumping = false;
-		
-
 		}
 	}
 }
