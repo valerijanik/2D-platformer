@@ -1,0 +1,40 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyHealthManager : MonoBehaviour
+{
+	public int enemyMaxHealth;
+	public int enemyCurrentHealth;
+	public int scoreValue;
+	public ScoreManager scoreManager;
+    public Animator animator;
+
+	void Start ()
+    {
+		scoreManager = GameObject.Find ("ScoreManager").GetComponent<ScoreManager> ();
+		enemyCurrentHealth = enemyMaxHealth;
+	}
+
+	void Update ()
+    {
+
+		if (enemyCurrentHealth <= 0)
+		{
+			Destroy (gameObject);
+			scoreManager.AddScore (scoreValue);
+
+		}
+	}
+    
+	public void HurtEnemy(int damageToGive)
+	{
+		enemyCurrentHealth -= damageToGive;
+
+	}
+
+	public void SetMaxHealth()
+	{
+		enemyCurrentHealth = enemyMaxHealth;
+	}
+}
