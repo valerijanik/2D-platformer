@@ -1,0 +1,80 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class PlayerHealthManager : MonoBehaviour
+{
+
+    public int playerMaxHealth;
+    public int playerCurrentHealth;
+    public Hearts HeartsScript;
+    public Animator animator;
+
+    private void OnLevelWasLoaded(int level)
+    {
+        if (level == SceneManager.GetSceneByName("BossRoom").buildIndex)
+        {
+            playerCurrentHealth = PlayerPrefs.GetInt("CurrentHealth", playerMaxHealth);
+            HeartsScript.SetHearts(playerCurrentHealth);
+        }
+        else
+        {
+            SetMaxHealth();
+        }
+    }
+
+    private void OnDisable()
+    {
+        PlayerPrefs.SetInt("CurrentHealth", playerCurrentHealth);
+    }
+
+    void Update()
+    {
+        if (playerCurrentHealth <= 0)
+        {
+            animator.SetBool("Player Death", true);
+            Invoke("ReloadLevel", 2);
+        }
+    }
+
+    void ReloadLevel ()
+    {
+        Application.LoadLevel("Gluttony, Level 3");
+    }
+
+    public bool IsDead
+    {
+        get
+        {
+            return playerCurrentHealth <=0;
+        }
+    }
+
+    public void TakeDamage(int damageToGive)
+    {
+        playerCurrentHealth -= damageToGive;
+        HeartsScript.SetHearts(playerCurrentHealth);
+        animator.SetTrigger("TakingDamage");
+    }
+
+    public void AfterTakingDamage()
+    {
+        animator.SetBool("TakingDamage", false);
+    }
+
+    public void SetMaxHealth()
+    {
+        playerCurrentHealth = playerMaxHealth;
+        HeartsScript.SetHearts(playerCurrentHealth);
+    }
+
+    public void Heal(int amount)
+    {
+        playerCurrentHealth += amount;
+        playerCurrentHealth = System.Math.Min(playerMaxHealth, playerCurrentHealth);
+        HeartsScript.SetHearts(playerCurrentHealth);
+    }
+}
+
+
