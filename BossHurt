@@ -1,0 +1,50 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class HurtBoss : MonoBehaviour
+{
+
+    public int damageToGive;
+    public GameObject damageBurst;
+    public Transform hitPoint;
+    public GameObject damageNumber;
+    public bool isAttacking;
+    public Animator animator;
+    public float attackCD;
+    float CDtimer;
+
+    void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isAttacking = true;
+
+            animator.SetBool("IsAttacking", true);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            isAttacking = false;
+
+            animator.SetBool("IsAttacking", false);
+        }
+        if (CDtimer >= 0)
+            CDtimer -= Time.deltaTime;
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Boss" && isAttacking && CDtimer <= 0)
+        {
+            other.gameObject.GetComponent<BossHealthManager>().HurtEnemy(damageToGive);
+            Instantiate(damageBurst, hitPoint.position, hitPoint.rotation);
+            var clone = (GameObject)Instantiate(damageNumber, hitPoint.position, Quaternion.Euler(Vector3.zero));
+            clone.GetComponent<FloatingNumbers>().damageNumber = damageToGive;
+            isAttacking = false;
+            CDtimer = attackCD;
+        }
+    }
+
+}
